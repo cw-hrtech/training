@@ -40,7 +40,16 @@ export default {
   modules: [
     // Doc: https://bootstrap-vue.js.org
     'bootstrap-vue/nuxt',
+    '@nuxtjs/axios',
   ],
+  axios: {
+    proxy: true,
+    debug: 'debug',
+  },
+
+  proxy: {
+    '/api': { target: "http://api.training.vn" },
+  },
   /*
   ** Build configuration
   */
