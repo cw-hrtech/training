@@ -1,0 +1,69 @@
+version: '3.3'
+
+services:
+  nginx:
+    build:
+      context: ./nginx
+      args:
+        - http_proxy
+        - https_proxy
+        - no_proxy
+    ports:
+      - "${NGINX_HOST_HTTP_PORT}:80"
+      - "${NGINX_HOST_HTTPS_PORT}:443"
+    volumes:
+      - ${LARAVEL_CODE_PATH}:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
+    depends_on:
+      - php-fpm
+      - mysql
+      - redis
+  php-fpm:
+    build:
+      context: ./php-fpm
+      args:
+        - http_proxy
+        - https_proxy
+        - no_proxy
+    volumes:
+      - ${LARAVEL_CODE_PATH}:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
+      - ./php-fpm/php7.3.ini:/usr/local/etc/php/php.ini
+      - ./php-fpm/.ssh:/home/vitop/.ssh
+  mysql:
+    build: ./mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./mysql/app.cnf:/etc/mysql/conf.d/app.cnf
+      - ./mysql/initdb.d/:/docker-entrypoint-initdb.d/
+    ports:
+      - "${MYSQL_PORT}:3306"
+  redis:
+    build: ./redis
+    volumes:
+      - ./redis/tmp/redis:/data
+    ports:
+      - "${REDIS_PORT}:6379"
+  nuxtjs:
+    build: ./nuxtjs
+    volumes:
+      - ${NUXTJS_CODE_PATH}:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
+    tty: true
+    command: node
+    links:
+      - "nginx:${API_DOMAIN}"
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOSTS=mysql
+    ports:
+      - "${PHPMYADMIN_PORT}:80"
+    volumes:
+      - ./phpmyadmin/config.ini:/usr/local/etc/php/conf.d/phpmyadmin.ini
+volumes:
+  mysql-data:
+    driver: local
