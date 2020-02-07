@@ -53,6 +53,8 @@ services:
       - ${NUXTJS_CODE_PATH}:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
     tty: true
     command: node
+    ports:
+      - "${NUXTJS_PORT}:3000"
     links:
       - "nginx:${API_DOMAIN}"
   phpmyadmin:
