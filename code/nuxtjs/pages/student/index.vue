@@ -5,9 +5,6 @@
       <NLink class="btn btn-outline-primary" :to="{name: 'index'}">
         <i class="fa fa-home"></i> Home Page
       </NLink>
-      <NLink class="btn btn-outline-primary" :to="{name: 'student'}">
-        <i class="fa fa-home"></i> List
-      </NLink>
       <NLink class="btn btn-outline-primary" :to="{name: 'student-create'}">
         <i class="fa fa-plus"></i> Add new student
       </NLink>

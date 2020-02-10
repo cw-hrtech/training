@@ -17,4 +17,4 @@ Route::resource('student', 'API\StudentController', [
     'parameters' => [
         'student' => 'id'
     ]
-])->except(['edit']);
+])->except(['edit', 'create']);
