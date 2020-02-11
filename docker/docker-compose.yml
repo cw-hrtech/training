@@ -43,8 +43,6 @@ services:
       - "${MYSQL_PORT}:3306"
   redis:
     build: ./redis
-    volumes:
-      - ./redis/tmp/redis:/data
     ports:
       - "${REDIS_PORT}:6379"
   nuxtjs:
