@@ -55,6 +55,7 @@ services:
       - "${NUXTJS_PORT}:3000"
     links:
       - "nginx:${API_DOMAIN}"
+      - "socket:socket.training.vn"
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     environment:
@@ -64,6 +65,14 @@ services:
       - "${PHPMYADMIN_PORT}:80"
     volumes:
       - ./phpmyadmin/config.ini:/usr/local/etc/php/conf.d/phpmyadmin.ini
+  socket:
+    build: ./socket
+    volumes:
+      - ${SOCKET_IO_CODE_PATH}:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
+    tty: true
+    command: node
+    ports:
+      - "${SOCKET_PORT}:3000"
 volumes:
   mysql-data:
     driver: local
